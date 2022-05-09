@@ -175,6 +175,8 @@ class _MapPageState extends State<MapPage> {
                                     markerCenterAnimation:
                                         MarkerCenterAnimation(),
                                     popupBuilder: (ctx, marker) {
+                                      final _brightness = WidgetsBinding
+                                          .instance!.window.platformBrightness;
                                       final index = state.list.indexWhere(
                                           (element) =>
                                               element.latLng == marker.point);
@@ -186,7 +188,9 @@ class _MapPageState extends State<MapPage> {
                                             MediaQuery.of(context).size.height *
                                                 0.28,
                                         child: MarkPopupWidget(
-                                            info: state.list[index]),
+                                          info: state.list[index],
+                                          brightness: _brightness,
+                                        ),
                                       );
                                     }),
                               );
