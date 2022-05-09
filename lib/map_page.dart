@@ -183,10 +183,10 @@ class _MapPageState extends State<MapPage> {
                                       return SizedBox(
                                         height:
                                             MediaQuery.of(context).size.height *
-                                                0.28,
+                                                0.3,
                                         width:
                                             MediaQuery.of(context).size.height *
-                                                0.28,
+                                                0.3,
                                         child: MarkPopupWidget(
                                           info: state.list[index],
                                           brightness: _brightness,

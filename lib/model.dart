@@ -14,7 +14,9 @@ class SelfTestInfo {
   SelfTestInfo.fromList(List<dynamic> list)
       : sellerName = list[1],
         sellerAddress = list[2],
-        latLng = LatLng(list[4], list[3]),
+        latLng = LatLng(
+            (list[4] is double) ? list[4] : double.parse(list[4].toString()),
+            (list[3] is double) ? list[3] : double.parse(list[3].toString())),
         sellerTel = list[5],
         manufactor = list[6],
         remainAmount = list[7],

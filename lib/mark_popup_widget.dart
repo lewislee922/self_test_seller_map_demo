@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:self_test_seller_map_demo/model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MarkPopupWidget extends StatelessWidget {
   final SelfTestInfo info;
@@ -20,17 +21,20 @@ class MarkPopupWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Flexible(flex: 2, child: Text(info.manufactor)),
+                Flexible(flex: 4, child: Text(info.manufactor, softWrap: true)),
                 Flexible(
                   flex: 1,
-                  child: Text(
-                    info.remainAmount.toString(),
-                    style: TextStyle(
-                        fontSize: 24,
-                        color: info.remainAmount >= 50 ? null : Colors.red,
-                        fontWeight: FontWeight.bold),
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(
+                      info.remainAmount.toString(),
+                      style: TextStyle(
+                          fontSize: 24,
+                          color: info.remainAmount >= 50 ? null : Colors.red,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ],
@@ -44,13 +48,16 @@ class MarkPopupWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(
-                  flex: 3,
+                  flex: 4,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        info.sellerName,
-                        style: TextStyle(fontSize: 20),
+                      FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text(
+                          info.sellerName,
+                          style: TextStyle(fontSize: 20),
+                        ),
                       ),
                       const SizedBox(
                         height: 10.0,
@@ -77,27 +84,44 @@ class MarkPopupWidget extends StatelessWidget {
                                         ],
                                       ));
                             },
-                            icon: Icon(Icons.warning)),
+                            icon: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Icon(Icons.warning))),
                       )
                     : const SizedBox(),
               ],
             ),
             Spacer(),
-            TextButton(
-                onPressed: () async {
-                  if (kIsWeb) {
-                    MapsLauncher.launchCoordinates(info.latLng.latitude,
-                        info.latLng.longitude, info.sellerName);
-                  } else {
-                    final availableMaps = await MapLauncher.installedMaps;
-                    await availableMaps.first.showMarker(
-                      coords:
-                          Coords(info.latLng.latitude, info.latLng.longitude),
-                      title: info.sellerName,
-                    );
-                  }
-                },
-                child: Text("導航"))
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                !kIsWeb
+                    ? TextButton(
+                        onPressed: () {
+                          launchUrl(Uri(
+                              scheme: 'tel',
+                              path: info.sellerTel
+                                  .replaceAll(RegExp(r"/(\(\)/)"), "")));
+                        },
+                        child: Text("致電"))
+                    : const SizedBox(),
+                TextButton(
+                    onPressed: () async {
+                      if (kIsWeb) {
+                        MapsLauncher.launchCoordinates(info.latLng.latitude,
+                            info.latLng.longitude, info.sellerName);
+                      } else {
+                        final availableMaps = await MapLauncher.installedMaps;
+                        await availableMaps.first.showMarker(
+                          coords: Coords(
+                              info.latLng.latitude, info.latLng.longitude),
+                          title: info.sellerName,
+                        );
+                      }
+                    },
+                    child: Text("導航"))
+              ],
+            ),
           ],
         ),
       ),
