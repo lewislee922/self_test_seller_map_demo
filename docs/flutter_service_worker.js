@@ -3,11 +3,11 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "version.json": "150555d655221cce0b8d458faf2c2a32",
+  "version.json": "7570b42880fa1216f352e77421bc5e2e",
 "icon.png": "8b027dee709a0af7882c89c39ba97793",
-"index.html": "1572c284a27b3922056513f830dd5935",
-"/": "1572c284a27b3922056513f830dd5935",
-"main.dart.js": "6fbd36f7cf26eb4d82197075e66b0b11",
+"index.html": "597db0f614a1700ebef3be27e35f71e3",
+"/": "597db0f614a1700ebef3be27e35f71e3",
+"main.dart.js": "e147c0803dc382f011322b8baa4ee13b",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
@@ -34,7 +34,11 @@ const RESOURCES = {
 "assets/packages/map_launcher/assets/icons/apple.svg": "6fe49a5ae50a4c603897f6f54dec16a8",
 "assets/packages/map_launcher/assets/icons/waze.svg": "311a17de2a40c8fa1dd9022d4e12982c",
 "assets/packages/map_launcher/assets/icons/amap.svg": "00409535b144c70322cd4600de82657c",
-"assets/fonts/MaterialIcons-Regular.otf": "7e7a6cccddf6d7b20012a548461d5d81"
+"assets/fonts/MaterialIcons-Regular.otf": "7e7a6cccddf6d7b20012a548461d5d81",
+"canvaskit/canvaskit.js": "c2b4e5f3d7a3d82aed024e7249a78487",
+"canvaskit/profiling/canvaskit.js": "ae2949af4efc61d28a4a80fffa1db900",
+"canvaskit/profiling/canvaskit.wasm": "95e736ab31147d1b2c7b25f11d4c32cd",
+"canvaskit/canvaskit.wasm": "4b83d89d9fecbea8ca46f2f760c5a9ba"
 };
 
 // The application shell files that are downloaded before a service worker can
