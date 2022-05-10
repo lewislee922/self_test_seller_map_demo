@@ -18,12 +18,19 @@ class MarkPopupWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Flexible(flex: 4, child: Text(info.manufactor, softWrap: true)),
+                Flexible(
+                    flex: 4,
+                    child: Text(
+                      info.manufactor,
+                      maxLines: 2,
+                      overflow: TextOverflow.visible,
+                    )),
                 Flexible(
                   flex: 1,
                   child: FittedBox(
@@ -32,7 +39,7 @@ class MarkPopupWidget extends StatelessWidget {
                       info.remainAmount.toString(),
                       style: TextStyle(
                           fontSize: 24,
-                          color: info.remainAmount >= 50 ? null : Colors.red,
+                          color: info.remainAmount >= 25 ? null : Colors.red,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -43,7 +50,7 @@ class MarkPopupWidget extends StatelessWidget {
               color:
                   brightness == Brightness.light ? Colors.black : Colors.white,
             ),
-            Spacer(),
+            SizedBox(height: 8.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -52,12 +59,12 @@ class MarkPopupWidget extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Text(
-                          info.sellerName,
-                          style: TextStyle(fontSize: 20),
-                        ),
+                      Text(
+                        info.sellerName,
+                        maxLines: 2,
+                        overflow: TextOverflow.visible,
+                        softWrap: true,
+                        style: TextStyle(fontSize: 20),
                       ),
                       const SizedBox(
                         height: 10.0,
@@ -91,7 +98,7 @@ class MarkPopupWidget extends StatelessWidget {
                     : const SizedBox(),
               ],
             ),
-            Spacer(),
+            SizedBox(height: 8.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

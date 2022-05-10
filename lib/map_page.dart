@@ -13,7 +13,10 @@ import 'package:self_test_seller_map_demo/bloc/self_test_bloc.dart';
 import 'package:self_test_seller_map_demo/bloc/self_test_event.dart';
 import 'package:self_test_seller_map_demo/bloc/self_test_state.dart';
 import 'package:self_test_seller_map_demo/develop_info_dialog.dart';
-import 'package:self_test_seller_map_demo/mark_popup_widget.dart';
+import 'package:self_test_seller_map_demo/widgets/id_day_widget.dart';
+import 'package:self_test_seller_map_demo/widgets/info_button.dart';
+import 'package:self_test_seller_map_demo/widgets/mark_popup_widget.dart';
+import 'package:self_test_seller_map_demo/widgets/pin_example_widget.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -28,6 +31,17 @@ class _MapPageState extends State<MapPage> {
   late StreamController _updateStreamController;
   final MapController _mapController = MapController();
   int updateTime = 120;
+
+  String _idDay() {
+    final _weekDay = DateTime.now().weekday;
+    if (_weekDay == 7) {
+      return "無限制";
+    } else if (_weekDay % 2 == 0) {
+      return "身分證尾數0、2、4、6、8可購買";
+    }
+    return "身分證尾數1、3、5、7、9可購買";
+  }
+
   Future<LatLng> latlng() async {
     try {
       final position = await _determinePosition();
@@ -127,15 +141,17 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.my_location),
+        child: const Icon(Icons.my_location),
         onPressed: () async {
           final position = await latlng();
           _mapController.move(position, 15);
         },
       ),
       body: SafeArea(
-        child: Stack(alignment: Alignment.center, children: [
-          StreamBuilder<LatLng>(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            StreamBuilder<LatLng>(
               stream: latlng().asStream(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -168,7 +184,7 @@ class _MapPageState extends State<MapPage> {
                                             builder: (ctx) => Icon(
                                                   Icons.location_pin,
                                                   size: 32.0,
-                                                  color: e.remainAmount >= 50
+                                                  color: e.remainAmount >= 25
                                                       ? Colors.green
                                                       : Colors.red,
                                                 )))),
@@ -181,12 +197,7 @@ class _MapPageState extends State<MapPage> {
                                           (element) =>
                                               element.latLng == marker.point);
                                       return SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.3,
-                                        width:
-                                            MediaQuery.of(context).size.height *
-                                                0.3,
+                                        width: 208,
                                         child: MarkPopupWidget(
                                           info: state.list[index],
                                           brightness: _brightness,
@@ -206,54 +217,56 @@ class _MapPageState extends State<MapPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
                       CircularProgressIndicator(),
-                      SizedBox(height: 4.0),
+                      SizedBox(height: 8.0),
                       Text("初始化中，請稍候")
                     ],
                   ),
                 );
-              }),
-          Positioned(
-              top: 16.0,
-              left: 16.0,
-              child: IconButton(
-                  onPressed: () {
-                    showDialog(
-                        barrierDismissible: true,
-                        context: context,
-                        builder: (ctx) => const DeveloperInfoDialog());
-                  },
-                  icon: const Icon(Icons.info))),
-          Positioned(
-              top: 16.0,
-              right: 16.0,
-              child: StreamBuilder(
-                  stream: _updateStreamController.stream,
-                  builder: (context, snapshot) {
-                    return Container(
-                      padding: EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? Colors.white.withOpacity(0.75)
-                            : Colors.grey.withOpacity(0.75),
-                      ),
-                      child: Row(
-                        children: [
-                          Text("${snapshot.data ?? 0}秒後更新"),
-                          const SizedBox(width: 4.0),
-                          IconButton(
-                              icon: const Icon(Icons.refresh),
-                              onPressed: () {
-                                timer.cancel();
-                                _bloc.add(FetchEvent());
-                                updateTime = 120;
-                                timer = _setTimer();
-                              })
-                        ],
-                      ),
-                    );
-                  })),
-        ]),
+              },
+            ),
+            const Positioned(top: 16.0, left: 16.0, child: InfoButton()),
+            Positioned(
+                top: 16.0,
+                right: 16.0,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    StreamBuilder(
+                        stream: _updateStreamController.stream,
+                        builder: (context, snapshot) {
+                          return Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors.white.withOpacity(0.75)
+                                  : Colors.grey.withOpacity(0.75),
+                            ),
+                            child: Row(
+                              children: [
+                                Text("${snapshot.data ?? 0}秒後更新"),
+                                const SizedBox(width: 4.0),
+                                IconButton(
+                                    icon: const Icon(Icons.refresh),
+                                    onPressed: () {
+                                      timer.cancel();
+                                      _bloc.add(FetchEvent());
+                                      updateTime = 120;
+                                      timer = _setTimer();
+                                    })
+                              ],
+                            ),
+                          );
+                        }),
+                    SizedBox(height: 8.0),
+                    IdDayWidget(content: _idDay()),
+                    SizedBox(height: 8.0),
+                    PinExampleWidget()
+                  ],
+                )),
+          ],
+        ),
       ),
     );
   }
