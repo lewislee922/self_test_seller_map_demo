@@ -53,7 +53,7 @@ class _MapPageState extends State<MapPage> {
           builder: (context) => SimpleDialog(
                 contentPadding: const EdgeInsets.all(8.0),
                 children: [
-                  const Text("請開啟定位功能與權限以定位附近販賣點"),
+                  const Text("請開啟定位功能與權限以定位附近販售點"),
                   TextButton(
                       onPressed: () async {
                         final permission = await Geolocator.requestPermission();

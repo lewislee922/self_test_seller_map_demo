@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "家用快篩地圖",
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
       supportedLocales: [Locale('zh', 'TW')],
       theme: ThemeData(
