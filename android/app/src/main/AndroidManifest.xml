@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.self_test_seller_map_demo">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.lewispharmtech.self_test_seller_map">
     <queries>
         <!-- If your app opens https URLs -->
         <intent>
