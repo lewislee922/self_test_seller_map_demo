@@ -1,4 +1,4 @@
-import 'package:self_test_seller_map_demo/model.dart';
+import '../model.dart';
 
 abstract class SelfTestState {}
 

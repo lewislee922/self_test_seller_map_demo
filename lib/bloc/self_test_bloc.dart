@@ -2,11 +2,10 @@ import 'dart:convert';
 
 import 'package:csv/csv.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:self_test_seller_map_demo/bloc/self_test_event.dart';
-import 'package:self_test_seller_map_demo/bloc/self_test_state.dart';
 
+import '../bloc/self_test_event.dart';
+import '../bloc/self_test_state.dart';
 import '../model.dart';
 
 class SelfTestBloc extends Bloc<SelfTestEvent, SelfTestState> {

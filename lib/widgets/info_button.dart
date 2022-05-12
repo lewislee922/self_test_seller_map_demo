@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../develop_info_dialog.dart';
 
@@ -14,11 +15,12 @@ class InfoButton extends StatelessWidget {
               : Colors.grey.withOpacity(0.75),
           borderRadius: BorderRadius.circular(10.0)),
       child: IconButton(
-        onPressed: () {
+        onPressed: () async {
+          final _version = (await PackageInfo.fromPlatform()).version;
           showDialog(
               barrierDismissible: true,
               context: context,
-              builder: (ctx) => const DeveloperInfoDialog());
+              builder: (ctx) => DeveloperInfoDialog(verion: _version));
         },
         icon: const Icon(Icons.info),
       ),

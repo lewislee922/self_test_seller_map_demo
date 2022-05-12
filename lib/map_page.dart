@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -9,14 +10,15 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 
-import 'package:self_test_seller_map_demo/bloc/self_test_bloc.dart';
-import 'package:self_test_seller_map_demo/bloc/self_test_event.dart';
-import 'package:self_test_seller_map_demo/bloc/self_test_state.dart';
-import 'package:self_test_seller_map_demo/develop_info_dialog.dart';
-import 'package:self_test_seller_map_demo/widgets/id_day_widget.dart';
-import 'package:self_test_seller_map_demo/widgets/info_button.dart';
-import 'package:self_test_seller_map_demo/widgets/mark_popup_widget.dart';
-import 'package:self_test_seller_map_demo/widgets/pin_example_widget.dart';
+import '../bloc/self_test_bloc.dart';
+import '../bloc/self_test_event.dart';
+import '../bloc/self_test_state.dart';
+import '../widgets/id_day_widget.dart';
+import '../widgets/info_button.dart';
+import '../widgets/instruction_dialog.dart';
+import '../widgets/instruction_guide_button.dart';
+import '../widgets/mark_popup_widget.dart';
+import '../widgets/pin_example_widget.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -29,8 +31,10 @@ class _MapPageState extends State<MapPage> {
   late SelfTestBloc _bloc;
   late Timer timer;
   late StreamController _updateStreamController;
+  late LatLng _location;
   final MapController _mapController = MapController();
-  int updateTime = 120;
+  double _currentZoom = 15.0;
+  int _updateTime = 120;
 
   String _idDay() {
     final _weekDay = DateTime.now().weekday;
@@ -75,25 +79,21 @@ class _MapPageState extends State<MapPage> {
   }
 
   Timer _setTimer() => Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (updateTime != 0) {
-          updateTime = updateTime - 1;
+        if (_updateTime != 0) {
+          _updateTime = _updateTime - 1;
         } else {
           _bloc.add(FetchEvent());
-          updateTime = 120;
+          _updateTime = 120;
         }
-        _updateStreamController.sink.add(updateTime);
+        _updateStreamController.sink.add(_updateTime);
       });
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the
-      // App to enable the location services.
       return Future.error('Location services are disabled.');
     }
 
@@ -101,24 +101,16 @@ class _MapPageState extends State<MapPage> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
         return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
-    return await Geolocator.getCurrentPosition();
+    return Geolocator.getCurrentPosition();
   }
 
   @override
@@ -144,20 +136,26 @@ class _MapPageState extends State<MapPage> {
         child: const Icon(Icons.my_location),
         onPressed: () async {
           final position = await latlng();
-          _mapController.move(position, 15);
+          _mapController.move(
+              LatLng(position.latitude, position.longitude), _currentZoom);
         },
       ),
       body: SafeArea(
         child: Stack(
           alignment: Alignment.center,
           children: [
-            StreamBuilder<LatLng>(
-              stream: latlng().asStream(),
+            FutureBuilder<LatLng>(
+              future: latlng(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return FlutterMap(
                     mapController: _mapController,
-                    options: MapOptions(center: snapshot.data, zoom: 15.0),
+                    options: MapOptions(
+                        center: LatLng(
+                            snapshot.data!.latitude, snapshot.data!.longitude),
+                        zoom: _currentZoom,
+                        onPositionChanged: (_, __) =>
+                            _currentZoom = _mapController.zoom),
                     children: [
                       TileLayerWidget(
                         options: TileLayerOptions(
@@ -167,7 +165,9 @@ class _MapPageState extends State<MapPage> {
                         ),
                       ),
                       LocationMarkerLayerWidget(
-                        options: LocationMarkerLayerOptions(),
+                        options: LocationMarkerLayerOptions(
+                          showHeadingSector: !kIsWeb,
+                        ),
                       ),
                       BlocBuilder<SelfTestBloc, SelfTestState>(
                           bloc: _bloc,
@@ -252,7 +252,7 @@ class _MapPageState extends State<MapPage> {
                                     onPressed: () {
                                       timer.cancel();
                                       _bloc.add(FetchEvent());
-                                      updateTime = 120;
+                                      _updateTime = 120;
                                       timer = _setTimer();
                                     })
                               ],
@@ -262,7 +262,14 @@ class _MapPageState extends State<MapPage> {
                     SizedBox(height: 8.0),
                     IdDayWidget(content: _idDay()),
                     SizedBox(height: 8.0),
-                    PinExampleWidget()
+                    PinExampleWidget(),
+                    SizedBox(height: 8.0),
+                    InkWell(
+                      onTap: () => showDialog(
+                          context: context,
+                          builder: (ctx) => const InstructionDialog()),
+                      child: InstructionGuideButton(),
+                    )
                   ],
                 )),
           ],
