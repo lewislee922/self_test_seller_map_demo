@@ -13,11 +13,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "家用快篩地圖",
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
       supportedLocales: [Locale('zh', 'TW')],
       theme: ThemeData(
-        brightness: WidgetsBinding.instance?.window.platformBrightness,
+        brightness: WidgetsBinding.instance.window.platformBrightness,
         primarySwatch: Colors.blue,
       ),
       home: const MapPage(),

@@ -192,7 +192,7 @@ class _MapPageState extends State<MapPage> {
                                         MarkerCenterAnimation(),
                                     popupBuilder: (ctx, marker) {
                                       final _brightness = WidgetsBinding
-                                          .instance!.window.platformBrightness;
+                                          .instance.window.platformBrightness;
                                       final index = state.list.indexWhere(
                                           (element) =>
                                               element.latLng == marker.point);

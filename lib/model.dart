@@ -21,5 +21,5 @@ class SelfTestInfo {
         manufactor = list[6],
         remainAmount = list[7],
         updateTime = DateFormat("yyyy/MM/dd hh:mm:ss").parse(list[8]),
-        note = list[9];
+        note = list[9].toString();
 }
