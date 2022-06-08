@@ -7,7 +7,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 
 import '../bloc/self_test_bloc.dart';
@@ -31,7 +30,6 @@ class _MapPageState extends State<MapPage> {
   late SelfTestBloc _bloc;
   late Timer timer;
   late StreamController _updateStreamController;
-  late LatLng _location;
   final MapController _mapController = MapController();
   double _currentZoom = 15.0;
   int _updateTime = 120;
@@ -116,7 +114,7 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-    _bloc = SelfTestBloc(http.Client());
+    _bloc = SelfTestBloc();
     _updateStreamController = StreamController<int>();
     timer = _setTimer();
     _bloc.add(FetchEvent());
@@ -175,7 +173,7 @@ class _MapPageState extends State<MapPage> {
                             if (state is FinishState) {
                               return PopupMarkerLayerWidget(
                                 options: PopupMarkerLayerOptions(
-                                    popupAnimation: PopupAnimation.fade(),
+                                    popupAnimation: const PopupAnimation.fade(),
                                     markerTapBehavior: MarkerTapBehavior
                                         .togglePopupAndHideRest(),
                                     markers: List<Marker>.from(
@@ -189,7 +187,7 @@ class _MapPageState extends State<MapPage> {
                                                       : Colors.red,
                                                 )))),
                                     markerCenterAnimation:
-                                        MarkerCenterAnimation(),
+                                        const MarkerCenterAnimation(),
                                     popupBuilder: (ctx, marker) {
                                       final _brightness = WidgetsBinding
                                           .instance.window.platformBrightness;
@@ -259,16 +257,16 @@ class _MapPageState extends State<MapPage> {
                             ),
                           );
                         }),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
                     IdDayWidget(content: _idDay()),
-                    SizedBox(height: 8.0),
-                    PinExampleWidget(),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
+                    const PinExampleWidget(),
+                    const SizedBox(height: 8.0),
                     InkWell(
                       onTap: () => showDialog(
                           context: context,
                           builder: (ctx) => const InstructionDialog()),
-                      child: InstructionGuideButton(),
+                      child: const InstructionGuideButton(),
                     )
                   ],
                 )),

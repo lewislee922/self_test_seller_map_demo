@@ -17,8 +17,9 @@ class InstructionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      contentPadding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-      title: Text("操作影片說明"),
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+      title: const Text("操作影片說明"),
       children: _mapToWidget(),
     );
   }
@@ -28,9 +29,9 @@ class InstructionDialog extends StatelessWidget {
     _linkMap.forEach((key, value) {
       widget.add(Text(
         "★ " + key,
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ));
-      widget.add(SizedBox(height: 8.0));
+      widget.add(const SizedBox(height: 8.0));
       final list = (value as Map<String, String>)
           .keys
           .map((key) => TextButton(

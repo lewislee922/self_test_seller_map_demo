@@ -8,6 +8,7 @@ import '../model.dart';
 
 class MarkPopupWidget extends StatelessWidget {
   final SelfTestInfo info;
+  final TextStyle sellerTextStyle = const TextStyle(fontSize: 20);
   final Brightness brightness;
   const MarkPopupWidget(
       {Key? key, required this.info, required this.brightness})
@@ -51,7 +52,7 @@ class MarkPopupWidget extends StatelessWidget {
               color:
                   brightness == Brightness.light ? Colors.black : Colors.white,
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -65,14 +66,14 @@ class MarkPopupWidget extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.visible,
                         softWrap: true,
-                        style: TextStyle(fontSize: 20),
+                        style: sellerTextStyle,
                       ),
                       const SizedBox(
                         height: 10.0,
                       ),
                       Text(
                         info.sellerTel,
-                        style: TextStyle(fontSize: 20),
+                        style: sellerTextStyle,
                       )
                     ],
                   ),
@@ -92,14 +93,14 @@ class MarkPopupWidget extends StatelessWidget {
                                         ],
                                       ));
                             },
-                            icon: FittedBox(
+                            icon: const FittedBox(
                                 fit: BoxFit.fitWidth,
                                 child: Icon(Icons.warning))),
                       )
                     : const SizedBox(),
               ],
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -111,7 +112,7 @@ class MarkPopupWidget extends StatelessWidget {
                               path: info.sellerTel
                                   .replaceAll(RegExp(r"/(\(\)/)"), "")));
                         },
-                        child: Text("致電"))
+                        child: const Text("致電"))
                     : const SizedBox(),
                 TextButton(
                     onPressed: () async {
@@ -127,7 +128,7 @@ class MarkPopupWidget extends StatelessWidget {
                         );
                       }
                     },
-                    child: Text("導航"))
+                    child: const Text("導航"))
               ],
             ),
           ],

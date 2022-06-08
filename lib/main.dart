@@ -9,14 +9,13 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "家用快篩地圖",
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
-      supportedLocales: [Locale('zh', 'TW')],
+      supportedLocales: const [Locale('zh', 'TW')],
       theme: ThemeData(
         brightness: WidgetsBinding.instance.window.platformBrightness,
         primarySwatch: Colors.blue,

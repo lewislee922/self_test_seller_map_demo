@@ -15,7 +15,7 @@ class PinExampleWidget extends StatelessWidget {
       child: FittedBox(
           fit: BoxFit.contain,
           child: Row(
-            children: [
+            children: const [
               Icon(
                 Icons.location_pin,
                 color: Colors.green,
